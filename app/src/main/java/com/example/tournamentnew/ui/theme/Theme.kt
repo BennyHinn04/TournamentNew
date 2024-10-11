@@ -53,7 +53,7 @@ fun TournamentNewTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = merriweatherTypography,
         content = content
     )
 }

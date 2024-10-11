@@ -4,14 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.tournamentnew.data.AuthViewModel
+import com.example.tournamentnew.data.viewModel.AuthViewModel
 
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: AuthViewModel = viewModel()) {
+fun LoginRoute(navController: NavHostController, viewModel: AuthViewModel = viewModel()) {
     val authState by viewModel.authState.observeAsState()
 
     when (authState) {

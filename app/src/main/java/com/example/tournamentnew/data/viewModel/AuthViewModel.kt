@@ -1,8 +1,9 @@
-package com.example.tournamentnew.data
+package com.example.tournamentnew.data.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.tournamentnew.data.AuthRepository
 import com.example.tournamentnew.ui.home.AuthState
 
 

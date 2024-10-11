@@ -3,6 +3,7 @@ package com.example.tournamentnew.ui.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tournamentnew.ui.theme.TournamentNewTheme
 
 @Composable
 fun HomeScreen() {
@@ -33,9 +35,11 @@ fun HomeScreen() {
         ) {
             Text(
                 text = "REGISTER",
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.displayLarge
             )
         }
+        Spacer(modifier = Modifier.padding(8.dp))
         Card(
             modifier = Modifier
                 .padding(8.dp)
@@ -48,7 +52,7 @@ fun HomeScreen() {
             Text(
                 text = "ORGANISE",
                 modifier = Modifier.padding(8.dp),
-                style =
+                style = MaterialTheme.typography.displayLarge
             )
         }
     }
@@ -58,11 +62,11 @@ fun HomeScreen() {
 
 
 @Preview(showBackground = true,
-    widthDp = 200,
-    heightDp = 400)
+    widthDp = 360,
+    heightDp = 800)
 @Composable
 fun HomeScreenPreview() {
-    MaterialTheme {
+    TournamentNewTheme {  
         HomeScreen()
     }
 
