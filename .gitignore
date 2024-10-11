@@ -13,3 +13,70 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Gradle
+.gradle/
+build/
+*/build/
+!gradle-wrapper.jar
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IntelliJ/Android Studio specific files
+.idea/
+*.iml
+*.hprof
+
+# User-specific configuration files
+.DS_Store
+*.log
+*.swp
+*.swo
+*.stackdump
+
+# Miscellaneous binary files
+*.apk
+*.ap_
+*.dex
+*.jar
+*.class
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.7z
+*.bz2
+
+# Android Studio captures
+captures/
+
+# Generated asset files
+*.class
+*.dex
+*.apk
+*.ap_
+*.dSYM/
+*.so
+*.keystore
+*.jks
+
+# Gradle Wrapper files
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# MacOS
+*.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+
+# Linux file system things
+*.directory
+
+# Android-specific files
+!gradle.properties
+.idea/
+.gradle/
+local.properties
+
