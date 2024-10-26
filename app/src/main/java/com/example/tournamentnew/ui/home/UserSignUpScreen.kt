@@ -4,14 +4,17 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
@@ -34,86 +37,115 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.tournamentnew.data.viewModel.LocationViewModel
 import com.example.tournamentnew.data.viewModel.SignUpViewModel
 import com.example.tournamentnew.ui.theme.TournamentNewTheme
 
+
+
+data class User(
+    val username : String="",
+    val latitude : Double=0.00,
+    val longitude : Double=0.00,
+    val userType : String=""
+)
 @Composable
-fun SignUpScreen(navController: NavController,viewModel:SignUpViewModel,userType: String,modifier: Modifier = Modifier) {
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel= viewModel(),locationViewModel: LocationViewModel, userType: String, modifier: Modifier = Modifier) {
     var clicked by remember { mutableStateOf(false) }
     var showAlert by remember { mutableStateOf(false) }
+
+    // Store constant values in remember to avoid unnecessary recompositions
+    val screenTitle = remember { "${userType.uppercase()} SIGN UP" }
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "${userType.uppercase()} SIGN UP",
+            text = screenTitle,
             style = MaterialTheme.typography.displaySmall
         )
-        Spacer(modifier = Modifier.padding(7.dp))
+        Spacer(modifier = Modifier.padding(vertical = 7.dp))
+
         InputFieldWithIcon(
-            icon = Icons.Default.Person, // Replace with a custom drawable if needed
+            icon = Icons.Filled.Email,
+            label = "Gmail",
+            value = viewModel.useremail,
+            onValueChange = { viewModel.updateGmail(it) }
+        )
+
+        InputFieldWithIcon(
+            icon = Icons.Default.Person,
             label = "Username",
             value = viewModel.username,
-            onValueChange = {
-                viewModel.updateUsername(it)
-            }
+            onValueChange = { viewModel.updateUsername(it) }
         )
 
         InputFieldWithIcon(
             icon = Icons.Default.Lock,
             label = "Password",
             value = viewModel.password,
-            onValueChange = {
-                viewModel.updatePassword(it)
-            }
-
+            onValueChange = { viewModel.updatePassword(it) }
         )
-        Spacer(modifier = Modifier.padding(6.dp))
-        Card(
+
+        Spacer(modifier = Modifier.padding(vertical = 6.dp))
+
+        // Simplified UI for location button using Box instead of Card
+        Box(
             modifier = Modifier
                 .padding(8.dp)
-                .clickable { clicked = true
-                },
-            shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF676261)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                .background(Color(0xFF676261), shape = RoundedCornerShape(6.dp))
+                .clickable { clicked = true }
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "FETCH LOCATION",
-                modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.bodySmall
             )
         }
+
         Spacer(modifier = Modifier.padding(8.dp))
-        Card(
+
+        // Simplified UI for Sign Up button
+        Box(
             modifier = Modifier
                 .padding(8.dp)
-                .clickable {},
-            shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF56B2B2)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-
+                .background(Color(0xFF56B2B2), shape = RoundedCornerShape(6.dp))
+                .clickable { viewModel.updateUserLocation(locationViewModel.latitude,locationViewModel.longitude)
+                    viewModel.updateUserType(userType)
+                    if(!viewModel.useremail.isBlank()&&!viewModel.username.isBlank()&&!viewModel.password.isBlank()) {
+                        viewModel.insertFirebase()
+                    }
+                    navController.navigate("userlogin/$userType")
+                }
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "SIGN UP",
-                modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.displaySmall
             )
         }
-        if(clicked) {
-            LocationPermissionRequest( {
-                navController.navigate("")
-            }) {
-                showAlert = true
-            }
-        }
-        if(showAlert) {
-            Text(text="You must allow to continue")
+
+        if (clicked) {
+            LocationPermissionRequest(
+                onLocationGranted = {
+                    navController.navigate("fetchlocation") // Navigate when permission is granted
+                },
+                onLocationDenied = {
+                    clicked = false
+                    showAlert = true
+                }
+            )
         }
 
+        if (showAlert) {
+            Text(text = "You must allow location to continue")
+        }
     }
 }
 
@@ -122,54 +154,36 @@ fun LocationPermissionRequest(
     onLocationGranted: () -> Unit,
     onLocationDenied: () -> Unit
 ) {
-    // Permission state to keep track of whether we have permission or not
-    var permissionGranted by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
+    val permissionGranted = remember { mutableStateOf(false) }
 
-    // Permission launcher for requesting location permission
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        permissionGranted = isGranted
         if (isGranted) {
             onLocationGranted()
         } else {
             onLocationDenied()
         }
+        permissionGranted.value = isGranted
     }
 
-    // Check if we already have location permission
-    val permissionStatus = ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
-
-    // If we don't have permission, request it when the composable first launches
     LaunchedEffect(Unit) {
+        val permissionStatus = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
-            print("Permission is granted")
-            permissionGranted = true
             onLocationGranted()
+            permissionGranted.value = true
         } else {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    // Content based on permission status
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (permissionGranted) {
-            Text(text = "Location permission granted!")
-        } else {
-            Text(text = "Requesting location permission...")
-        }
+    // Display current permission status (optional for debugging)
+    if (!permissionGranted.value) {
+        Text(text = "Requesting location permission...")
     }
-
-
 }
 
 
@@ -181,6 +195,6 @@ fun LocationPermissionRequest(
 @Composable
 fun SignUpScreenPreview() {
     TournamentNewTheme {
-        SignUpScreen(navController = rememberNavController(), viewModel = viewModel(), userType = "Player")
+
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -41,10 +42,17 @@ import androidx.navigation.compose.rememberNavController
 
 import com.example.tournamentnew.ui.theme.TournamentNewTheme
 import androidx.compose.runtime.getValue
+import com.example.tournamentnew.data.viewModel.LoginViewModel
+import com.example.tournamentnew.data.viewModel.OrganiserDashBoardViewModel
+import com.example.tournamentnew.data.viewModel.PlayerDashBoardViewModel
 import com.example.tournamentnew.data.viewModel.SignUpViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: SignUpViewModel, userType : String) {
+fun LoginScreen(navController: NavController, userType : String
+                ,playerViewModel: PlayerDashBoardViewModel
+                ,loginViewModel: LoginViewModel
+                ,organiserViewModel : OrganiserDashBoardViewModel
+) {
 
     Column(
         modifier = Modifier
@@ -58,21 +66,29 @@ fun LoginScreen(navController: NavController, viewModel: SignUpViewModel, userTy
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier = Modifier.padding(7.dp))
+
+        InputFieldWithIcon(
+            icon = Icons.Filled.Email,
+            label = "Gmail",
+            value = loginViewModel.email,
+            onValueChange = { loginViewModel.updateEmail(it) }
+        )
+
         InputFieldWithIcon(
             icon = Icons.Default.Person, // Replace with a custom drawable if needed
             label = "Username",
-            value = viewModel.username,
+            value = loginViewModel.username,
             onValueChange = {
-                viewModel.updateUsername(it)
+                loginViewModel.updateUsername(it)
             }
         )
 
         InputFieldWithIcon(
             icon = Icons.Default.Lock,
             label = "Password" ,
-            value = viewModel.password,
+            value = loginViewModel.password,
             onValueChange = {
-                viewModel.updatePassword(it)
+                loginViewModel.updatePassword(it)
             }
 
         )
@@ -80,7 +96,7 @@ fun LoginScreen(navController: NavController, viewModel: SignUpViewModel, userTy
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(8.dp)
-                .clickable {
+                .clickable {navController.navigate("usersignup/$userType")
                 },
             shape = RoundedCornerShape(6.dp),
             colors = CardDefaults.cardColors(containerColor = Color.LightGray),
@@ -96,7 +112,22 @@ fun LoginScreen(navController: NavController, viewModel: SignUpViewModel, userTy
         Card(
             modifier = Modifier
                 .padding(8.dp)
-                .clickable {},
+                .clickable {
+                    loginViewModel.authenticateUser {user,userId ->
+                        if(userType.lowercase().equals("player")) {
+                            playerViewModel.updateUser(user)
+                            playerViewModel.updateUserId(userId)
+                            navController.navigate("playerdashboard")
+                        }
+                        else {
+                            organiserViewModel.updateUser(user)
+                            organiserViewModel.updateUserId(userId)
+                            navController.navigate("organiserdashboard")
+                        }
+
+                    }
+
+                },
             shape = RoundedCornerShape(6.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF56B2B2)),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -156,6 +187,6 @@ fun InputFieldWithIcon(
 @Composable
 fun UserLoginScreenPreview() {
     TournamentNewTheme {
-        LoginScreen(navController = rememberNavController(), viewModel = viewModel(),userType = "Organiser")
+
     }
 }

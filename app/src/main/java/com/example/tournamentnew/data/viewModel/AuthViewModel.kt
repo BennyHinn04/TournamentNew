@@ -9,7 +9,7 @@ import com.example.tournamentnew.ui.home.AuthState
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
-
+/*
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> get() = _authState
 
@@ -29,13 +29,16 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun registerUser(email: String, password: String, displayName: String) {
         _authState.value = AuthState.Loading
+        /*
         authRepository.registerPlayer(email, password, displayName) { result ,userId->
             _authState.value = result
             if (result is AuthState.Success) {
                 _currentUserId.value = userId // Store the user's UID
             }
-        }
+        }*/
     }
+    */
+
 }
 
 

@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.tournamentnew.ui.home.SignUpScreen
+import com.example.tournamentnew.ui.maps.FetchUserLocationScreen
+import com.example.tournamentnew.ui.navigation.AppNavComponent
 import com.example.tournamentnew.ui.theme.TournamentNewTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TournamentNewTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SignUpScreen(rememberNavController(), viewModel(),"Organiser",Modifier.padding(innerPadding ))
+                    AppNavComponent(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

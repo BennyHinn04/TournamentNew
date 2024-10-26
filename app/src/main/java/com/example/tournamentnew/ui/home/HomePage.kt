@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -16,18 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tournamentnew.ui.theme.TournamentNewTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController,modifier: Modifier = Modifier) {
     Column(
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+
     ) {
         Card(
             modifier = Modifier
                 .padding(8.dp)
-                .clickable {},
+                .clickable {navController.navigate("userlogin/player")},
             shape = RoundedCornerShape(6.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF56B2B2)),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -43,7 +47,7 @@ fun HomeScreen() {
         Card(
             modifier = Modifier
                 .padding(8.dp)
-                .clickable {},
+                .clickable {navController.navigate("userlogin/organiser")},
             shape = RoundedCornerShape(6.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF56B2B2)),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -67,7 +71,7 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenPreview() {
     TournamentNewTheme {  
-        HomeScreen()
+
     }
 
 }

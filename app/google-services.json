@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "395361169595",
-    "project_id": "tournament-1ba73",
-    "storage_bucket": "tournament-1ba73.appspot.com"
+    "project_number": "532070693284",
+    "project_id": "touramentnew",
+    "storage_bucket": "touramentnew.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:395361169595:android:6846d60d2c3a04d2e7f99e",
+        "mobilesdk_app_id": "1:532070693284:android:637d936ffb5513e9502931",
         "android_client_info": {
           "package_name": "com.example.tournamentnew"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB8nym0WsaaQdeInxjthcJDX0sn-FnmV04"
+          "current_key": "AIzaSyChje1yYvANVp_7dvIE8evBR50XeLykg98"
         }
       ],
       "services": {

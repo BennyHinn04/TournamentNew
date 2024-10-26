@@ -11,6 +11,7 @@ import com.example.tournamentnew.data.viewModel.AuthViewModel
 
 @Composable
 fun LoginRoute(navController: NavHostController, viewModel: AuthViewModel = viewModel()) {
+    /*
     val authState by viewModel.authState.observeAsState()
 
     when (authState) {
@@ -38,6 +39,8 @@ fun LoginRoute(navController: NavHostController, viewModel: AuthViewModel = view
     }
 
     // Login form UI
+    */
+
 }
 
 sealed class AuthState {
